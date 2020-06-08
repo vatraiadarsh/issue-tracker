@@ -5,14 +5,20 @@ class IssueFilter extends Component {
     return <div>This is a placeholder for the Issue Filter</div>;
   }
 }
-
-class IssueRow extends Component {
+class IssueRow extends React.Component {
   render() {
-    const borderStyle = { border: "1px solid silver", padding: 4 };
+    const issue = this.props.issue;
     return (
       <tr>
-        <td style={borderStyle}>{this.props.issue_id}</td>
-        <td style={borderStyle}>{this.props.issue_title}</td>
+        <td>{issue.id}</td>
+        <td>{issue.status}</td>
+        <td>{issue.owner}</td>
+        <td>{issue.created.toDateString()}</td>
+        <td>{issue.effort}</td>
+        <td>
+          {issue.completionDate ? issue.completionDate.toDateString() : ""}
+        </td>
+        <td>{issue.title}</td>
       </tr>
     );
   }
@@ -20,21 +26,26 @@ class IssueRow extends Component {
 
 class IssueTable extends Component {
   render() {
-    const borderStyle = {borderStyle:"1px solid silver",padding:6}
+    const issueRows = this.props.issues.map((issue) => (
+      <IssueRow key={issue.id} issue={issue} />
+    ));
     return (
-      <table style={{ borderCollapse:"collapse" }}>
+      <table className="bordered-table">
         <thead>
           <tr>
-            <th style={borderStyle}>ID</th>
-            <th style={borderStyle}>Title</th>
+            <th>Id</th>
+            <th>Status</th>
+            <th>Owner</th>
+            <th>Created</th>
+            <th>Effort</th>
+            <th>Completion Date</th>
+            <th>Title</th>
           </tr>
         </thead>
-        <tbody>
-          <IssueRow issue_id={1} issue_title="Error in console while clicking Add"/>
-          <IssueRow issue_id={2} issue_title="Missing bottom border on panel"/>
-        </tbody>
+
+        <tbody>{issueRows}</tbody>
       </table>
-      );
+    );
   }
 }
 
@@ -44,6 +55,27 @@ class IssueAdd extends Component {
   }
 }
 
+const issues = [
+  {
+    id: 1,
+    status: "Open",
+    owner: "Adarsh",
+    created: new Date("2016-08-15"),
+    effort: 5,
+    completionDate: undefined,
+    title: "Error in console when clicking Add",
+  },
+  {
+    id: 2,
+    status: "Assigned",
+    owner: "Eddie",
+    created: new Date("2016-08-16"),
+    effort: 14,
+    completionDate: new Date("2016-08-30"),
+    title: "Missing bottom border on panel",
+  },
+];
+
 class IssueList extends Component {
   render() {
     return (
@@ -51,7 +83,7 @@ class IssueList extends Component {
         <h1>Issue Tracker</h1>
         <IssueFilter />
         <hr />
-        <IssueTable />
+        <IssueTable issues={issues} />
         <hr />
         <IssueAdd />
       </div>
